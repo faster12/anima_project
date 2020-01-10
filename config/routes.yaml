@@ -1,0 +1,14 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+# config/routes.yaml
+api_promo_list:
+    path:       /api/promos
+    controller: App\Controller\PromoApiController::list
+    methods:    GET|HEAD
+
+api_promo_edit:
+    path:       /api/promos/{id}
+    controller: App\Controller\PromoApiController::edit
+    methods:    PUT
