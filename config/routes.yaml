@@ -4,6 +4,26 @@
 
 # config/routes.yaml
 api_promo_list:
+    path:       /anima
+    controller: App\Controller\AnimaProgramController::index
+    methods:    GET|HEAD
+
+api_promo_list:
+    path:       /anima/new
+    controller: App\Controller\AnimaProgramController::new
+    methods:    GET|HEAD
+
+api_promo_list:
+    path:       /anima/{id}
+    controller: App\Controller\AnimaProgramController::show
+    methods:    GET|HEAD
+
+api_promo_list:
+    path:       /anima/{id}/edit
+    controller: App\Controller\AnimaProgramController::edit
+    methods:    GET/POST
+
+api_promo_list:
     path:       /api/promos
     controller: App\Controller\PromoApiController::list
     methods:    GET|HEAD
@@ -11,4 +31,4 @@ api_promo_list:
 api_promo_edit:
     path:       /api/promos/{id}
     controller: App\Controller\PromoApiController::edit
-    methods:    PUT
+    methods:    GET|HEAD

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AnimaProgram index{% endblock %}
+
+{% block body %}
+    <h1>AnimaProgram index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Program_id</th>
+                <th>Program_name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for anima_program in anima_programs %}
+            <tr>
+                <td>{{ anima_program.id }}</td>
+                <td>{{ anima_program.programId }}</td>
+                <td>{{ anima_program.programName }}</td>
+                <td>
+                    <a href="{{ path('anima_program_show', {'id': anima_program.id}) }}">show</a>
+                    <a href="{{ path('anima_program_edit', {'id': anima_program.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('anima_program_new') }}">Create new</a>
+{% endblock %}

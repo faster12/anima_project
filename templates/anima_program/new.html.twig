@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New AnimaProgram{% endblock %}
+
+{% block body %}
+    <h1>Create new AnimaProgram</h1>
+
+    {{ include('anima_program/_form.html.twig') }}
+
+    <a href="{{ path('anima_program_index') }}">back to list</a>
+{% endblock %}
