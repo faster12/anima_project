@@ -10,16 +10,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * @Route("/anima/program")
  */
 class AnimaProgramController extends AbstractController
 {
+    // logger
+    private $logger;
+    public function __construct(LoggerInterface $logger){
+        $this->logger = $logger;
+    }
+
     /**
      * @Route("/anima", name="anima_program_index", methods={"GET"})
      */
     public function index(AnimaProgramRepository $animaProgramRepository): Response
     {
+
+        /*
+            $animaprograms = $this->getDoctrine()
+            ->getRepository('App\Entity\Article')
+            ->findAll();
+        */
+
+        $this->logger->info('testar');
+
         return $this->render('anima_program/index.html.twig', [
             'anima_programs' => $animaProgramRepository->findAll(),
         ]);
@@ -34,7 +51,11 @@ class AnimaProgramController extends AbstractController
         $form = $this->createForm(AnimaProgramType::class, $animaProgram);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        /*
+            $article = $form->getData();
+        */
+
+        if ($form->isSubmitted()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($animaProgram);
             $entityManager->flush();
@@ -83,11 +104,18 @@ class AnimaProgramController extends AbstractController
      */
     public function delete(Request $request, AnimaProgram $animaProgram): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$animaProgram->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($animaProgram);
-            $entityManager->flush();
+
+        $em = $this->getDoctrine()->getManager();
+        $program = $em->getRepository('App\Entity\AnimaProgram')->find($animaProgram->getId());
+
+        if (!$program) {
+            throw $this->createNotFoundException(
+                'ops, nao encontrado: '
+            );
         }
+
+        $em->remove($program/* $animaProgram */);
+        $em->flush();
 
         return $this->redirectToRoute('anima_program_index');
     }

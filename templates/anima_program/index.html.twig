@@ -5,33 +5,28 @@
 {% block body %}
     <h1>AnimaProgram index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Program_id</th>
-                <th>Program_name</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row">
         {% for anima_program in anima_programs %}
-            <tr>
-                <td>{{ anima_program.id }}</td>
-                <td>{{ anima_program.programId }}</td>
-                <td>{{ anima_program.programName }}</td>
-                <td>
-                    <a href="{{ path('anima_program_show', {'id': anima_program.id}) }}">show</a>
-                    <a href="{{ path('anima_program_edit', {'id': anima_program.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <div class="col-sm-3">
+                <div class="card text-white bg-dark mb-3">
+                    <div class="card-header">
+                        <div class="card-title">
+                            {{ anima_program.id }} - {{ anima_program.programName }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="btn-group">
+                            <a class="btn btn-outline-info fa fa-eye " href="{{ path('anima_program_show', {'id': anima_program.id}) }}"> show</a>
+                            <a class="btn btn-outline-warning fa fa-pencil" href="{{ path('anima_program_edit', {'id': anima_program.id}) }}"> edit</a>
+                        </div>
+                    </div>
 
-    <a href="{{ path('anima_program_new') }}">Create new</a>
+                </div>
+            </div>
+        {% else %}
+            ops, nada encontrado
+        {% endfor %}
+    </div>
+
+    <a class="" href="{{ path('anima_program_new') }}">Create new</a>
 {% endblock %}

@@ -3,25 +3,25 @@
 #    controller: App\Controller\DefaultController::index
 
 # config/routes.yaml
-api_promo_list:
+anima_program_index:
     path:       /anima
     controller: App\Controller\AnimaProgramController::index
     methods:    GET|HEAD
 
-api_promo_list:
+anima_program_new:
     path:       /anima/new
     controller: App\Controller\AnimaProgramController::new
-    methods:    GET|HEAD
+    methods:    GET|POST
 
-api_promo_list:
+anima_program_show:
     path:       /anima/{id}
     controller: App\Controller\AnimaProgramController::show
     methods:    GET|HEAD
 
-api_promo_list:
+anima_program_edit:
     path:       /anima/{id}/edit
     controller: App\Controller\AnimaProgramController::edit
-    methods:    GET/POST
+    methods:    GET|POST
 
 api_promo_list:
     path:       /api/promos

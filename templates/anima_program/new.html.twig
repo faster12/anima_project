@@ -5,7 +5,24 @@
 {% block body %}
     <h1>Create new AnimaProgram</h1>
 
-    {{ include('anima_program/_form.html.twig') }}
+    <!--{{ include('anima_program/_form.html.twig') }}-->
+
+    <form name="anima_program" method="post">
+	    <!--<div id="anima_program">-->
+        <div class="form-group">
+        	<label for="anima_program_program_id" class="required">Program id</label>
+        	<input class="form-control" type="number" id="anima_program_program_id" name="anima_program[program_id]" required="required">
+        </div>
+
+        <div  class="form-group">
+        	<label for="anima_program_program_name" class="required">Program name</label>
+        	<input class="form-control" type="text" id="anima_program_program_name" name="anima_program[program_name]" required="required" maxlength="150">
+        </div>
+
+        <!--<input type="hidden" id="anima_program__token" name="anima_program[_token]" value="8K1YY3YQJhXvjPqZE92dLiWBugNvx_ZxQda1v1rXxlI">-->
+	    <!--</div>-->
+	    <button class="btn btn-success">Save</button>
+	</form>
 
     <a href="{{ path('anima_program_index') }}">back to list</a>
 {% endblock %}
