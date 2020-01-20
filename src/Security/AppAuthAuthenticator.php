@@ -65,7 +65,7 @@ class AppAuthAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            throw new CustomUserMessageAuthenticationException('Ops.. Usuário não encontrado amigo');
         }
 
         return $user;
