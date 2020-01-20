@@ -8,8 +8,16 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-    	<div class="container">
-	        {% block body %}{% endblock %}
+        <div class="header">
+            {% if app.user %}
+                <div class="mb-3">
+                    You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                </div>
+            {% endif %}
+        </div>
+
+    	<div class="container">            
+            {% block body %}{% endblock %}
         </div>
     </body>
     {% block javascripts %}{% endblock %}
