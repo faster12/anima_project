@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Psr\Log\LoggerInterface;
+#use Goutte\Client;
+use Jikan\Jikan;
 
 /**
  * @Route("/anima/program")
@@ -26,14 +28,33 @@ class AnimaProgramController extends AbstractController
     /**
      * @Route("/anima", name="anima_program_index", methods={"GET"})
      */
-    public function index(AnimaProgramRepository $animaProgramRepository): Response
+    public function index(AnimaProgramRepository $animaProgramRepository,Jikan $jikan): Response
     {
 
         /*
             $animaprograms = $this->getDoctrine()
             ->getRepository('App\Entity\Article')
             ->findAll();
+            summer spring fall winter
         */
+
+
+        #$jikan = new Jikan();
+        #echo 'pass 2';
+        #die;
+        $a = $jikan->SeasonList();
+        print_r($a);
+        die;
+        $client = new Client();
+        $crawler = $client->request('GET', 'https://www.symfony.com/blog/');
+        echo 'pass';
+        die;
+
+        #$season = $jikan->SeasonList();
+        echo "<pre>";
+        print_r($season);
+        echo "</pre>";
+        die;
 
         $this->logger->info('testar');
 
