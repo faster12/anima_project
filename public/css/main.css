@@ -1,0 +1,38 @@
+.main-content {
+  background-color: #efefef;
+}
+
+.subheading-wrapper .subheading {
+  font-size: 15px;
+  color: #9AC133;
+  text-transform: uppercase;
+}
+
+.heading-wrapper .heading {
+  font-size: 2rem;
+  color: #656565;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.card-img-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-img-overlay .card-title a {
+  color: white;
+}
+
+.card-img-overlay .card-title a:hover {
+  text-decoration: none;
+}
+
+.floating-wrapper {
+  transform: translateX(0px) translateY(-100px);
+}
+
+.home-card {
+	min-height: 400px;
+}

@@ -62,6 +62,10 @@ class AnimaProgramController extends AbstractController
                 'description_low' => substr($desc,0,100),
                 'score' => $v
             ];
+
+            if($k==20){
+                break;
+            }
         }
 
         // set log
