@@ -25,3 +25,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+    # when the service definition only contains arguments, you can omit the
+    # 'arguments' key and define the arguments just below the service class
+    #App\Controller\AnimaProgramController:
+    #    $jikan: '%jikan.jikan%'
+
+    Jikan\Jikan:
+        public: true
+        #args = variaveis $x que devem ser populadas com campos default ou etc 

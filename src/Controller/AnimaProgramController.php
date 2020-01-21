@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Psr\Log\LoggerInterface;
-#use Goutte\Client;
 use Jikan\Jikan;
 
 /**
@@ -30,7 +29,6 @@ class AnimaProgramController extends AbstractController
      */
     public function index(AnimaProgramRepository $animaProgramRepository,Jikan $jikan): Response
     {
-
         /*
             $animaprograms = $this->getDoctrine()
             ->getRepository('App\Entity\Article')
@@ -38,28 +36,40 @@ class AnimaProgramController extends AbstractController
             summer spring fall winter
         */
 
+        // list api
+        $a = $jikan->Seasonal(2020);
+        
+        // set array
+        $score = [];$source = [];$list = [];
+        foreach($a->anime as $k => $anime){
+            $score[] = $anime->getScore();
+        }
 
-        #$jikan = new Jikan();
-        #echo 'pass 2';
-        #die;
-        $a = $jikan->SeasonList();
-        print_r($a);
-        die;
-        $client = new Client();
-        $crawler = $client->request('GET', 'https://www.symfony.com/blog/');
-        echo 'pass';
-        die;
+        // ordena array
+        arsort($score);
 
-        #$season = $jikan->SeasonList();
-        echo "<pre>";
-        print_r($season);
-        echo "</pre>";
-        die;
+        // cria list
+        foreach($score as $k => $v){
+            
+            // descricao
+            $desc = $a->anime[$k]->getSynopsis();
 
-        $this->logger->info('testar');
+            // listagem
+            $list[] = [
+                'title' => $a->anime[$k]->getTitle(),
+                'image' => $a->anime[$k]->getImageURL(),
+                'description' => $desc,
+                'description_low' => substr($desc,0,100),
+                'score' => $v
+            ];
+        }
+
+        // set log
+        $this->logger->info('listed');
 
         return $this->render('anima_program/index.html.twig', [
             'anima_programs' => $animaProgramRepository->findAll(),
+            'animas' => $list
         ]);
     }
 

@@ -26,6 +26,29 @@
         {% else %}
             ops, nada encontrado
         {% endfor %}
+
+        <!-- anima list -->
+        <div class="row">
+            {% for anima in animas %}
+                <div class="col-6 col-lg-3">
+                    <div class="card text-white bg-light mb-3">
+                        <img style="object-fit: cover;" class="card-img-top" height="200px" src="{{anima.image}}">
+                        <div class="card-header">
+                            <div class="card-title">
+                                {{ anima.title }} - {{ anima.score }}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {{ anima.description_low }}
+                        </div>
+
+                    </div>
+                </div>
+            {% else %}
+                ops, nada encontrado
+            {% endfor %}
+        </div>
+
     </div>
 
     <a class="" href="{{ path('anima_program_new') }}">Create new</a>
