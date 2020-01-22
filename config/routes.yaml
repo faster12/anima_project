@@ -32,3 +32,19 @@ api_promo_edit:
     path:       /api/promos/{id}
     controller: App\Controller\PromoApiController::edit
     methods:    GET|HEAD
+
+#admin:
+#    path:       /admin
+#    controller: App\Controller\Admin\DashboardController::index
+#    methods:    GET|HEAD
+# anime list
+
+anime_import:
+    path:       /admin/anime/import
+    controller: App\Controller\Admin\AnimaController::importSeason
+    methods:    POST
+
+anime_list:
+    path:       /admin/anime
+    controller: App\Controller\Admin\AnimaController::index
+    methods:    GET|HEAD
