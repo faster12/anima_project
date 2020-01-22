@@ -5,13 +5,13 @@ namespace App\Controller;
 use App\Entity\AnimaProgram;
 use App\Form\AnimaProgramType;
 use App\Repository\AnimaProgramRepository;
+use App\Repository\AnimeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Psr\Log\LoggerInterface;
-use Jikan\Jikan;
 
 /**
  * @Route("/anima/program")
@@ -27,7 +27,7 @@ class AnimaProgramController extends AbstractController
     /**
      * @Route("/anima", name="anima_program_index", methods={"GET"})
      */
-    public function index(AnimaProgramRepository $animaProgramRepository,Jikan $jikan): Response
+    public function index(AnimaProgramRepository $animaProgramRepository,AnimeRepository $animeRepository): Response
     {
         /*
             $animaprograms = $this->getDoctrine()
@@ -36,40 +36,17 @@ class AnimaProgramController extends AbstractController
             summer spring fall winter
         */
 
-        // list api
-        $a = $jikan->Seasonal(2020);
-        
-        // set array
-        $score = [];$source = [];$list = [];
-        foreach($a->anime as $k => $anime){
-            $score[] = $anime->getScore();
-        }
-
-        // ordena array
-        arsort($score);
-
-        // cria list
-        foreach($score as $k => $v){
+        $animes = $animeRepository->findBy(['season'=>'winter'],null,20);
+        $list = [];
+        foreach($animes as $anime){
             
-            // descricao
-            $desc = $a->anime[$k]->getSynopsis();
-
-            // listagem
             $list[] = [
-                'title' => $a->anime[$k]->getTitle(),
-                'image' => $a->anime[$k]->getImageURL(),
-                'description' => $desc,
-                'description_low' => substr($desc,0,100),
-                'score' => $v
+                'title' => $anime->getTitle(),
+                'image' => $anime->getImage(),
+                'description_low' => substr($anime->getDescription(),0,100),
+                'score' => $anime->getScore(),
             ];
-
-            if($k==20){
-                break;
-            }
         }
-
-        // set log
-        $this->logger->info('listed');
 
         return $this->render('anima_program/index.html.twig', [
             'anima_programs' => $animaProgramRepository->findAll(),
