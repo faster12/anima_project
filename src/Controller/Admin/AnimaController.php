@@ -6,7 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\AnimeRepository;
+use App\Repository\AnimeImportedRepository;
 use App\Entity\Anime;
+use App\Entity\AnimeImported;
 use Jikan\Jikan;
 
 class AnimaController extends AbstractController
@@ -14,20 +16,20 @@ class AnimaController extends AbstractController
     /**
      * @Route("/admin/anime", name="anime_list")
      */
-    public function index(AnimeRepository $animeRepository)
+    public function index(AnimeRepository $ar,AnimeImportedRepository $air )
     {
-
         // $entityManager = $this->getDoctrine()->getManager();
 
         return $this->render('admin/anime_list.html.twig', [
-            'animes' => $animeRepository->findAll(),
+            'animes' => $ar->findAll(),
+            'imported' => $air->findAll(),
         ]);
     }
 
     /**
      * @Route("/admin/anime/import", name="anime_import")
      */
-    public function importSeason(Jikan $jikan, Request $request,AnimeRepository $animeRepository)
+    public function importSeason(Jikan $jikan, Request $request,AnimeRepository $ar, AnimeImportedRepository $air)
     {
 
         // get data
@@ -40,47 +42,64 @@ class AnimaController extends AbstractController
         // list all animes form season
         if( $season && $year ){
             
-            // season e year
-            $a = $jikan->Seasonal($year,$season);
-
             // get the manager
             $em = $this->getDoctrine()->getManager();
-        
-            // set array
-            $save = [];
 
-            // get the entity
+            // save data 
 
-            foreach($a->anime as $k => $anime){
-                                
-                // id do mal
-                $id = $anime->getMalId();
+                // season e year
+                $a = $jikan->Seasonal($year,$season);
+                
+                // le e salva dados
+                foreach($a->anime as $k => $anime){
+                                    
+                    // id do mal
+                    $id = $anime->getMalId();
 
-                // create or update
-                $animeEntity = $animeRepository->findOneBy([ 'mal_id' => $id ]);
-                if(!$animeEntity){
-                    $animeEntity = new Anime();
+                    // create or update
+                    $animeEntity = $ar->findOneBy([ 'mal_id' => $id ]);
+                    if(!$animeEntity){
+                        $animeEntity = new Anime();
+                    }
+
+                    // set data
+                    $animeEntity->setMalId( $id );
+                    $animeEntity->setScore( $anime->getScore() ); 
+                    $animeEntity->setTitle( $anime->getTitle() );
+                    $animeEntity->setImage( $anime->getImageURL() );
+                    $animeEntity->setType( $anime->getType() );
+                    $animeEntity->setDescription( $anime->getSynopsis() );
+                    $animeEntity->setSeason( $season );
+                    $animeEntity->setYear( $year );
+                    
+                    // persist
+                    $em->persist($animeEntity);
+
                 }
 
-                // set data
-                $animeEntity->setMalId( $id );
-                $animeEntity->setScore( $anime->getScore() ); 
-                $animeEntity->setTitle( $anime->getTitle() );
-                $animeEntity->setImage( $anime->getImageURL() );
-                $animeEntity->setType( $anime->getType() );
-                $animeEntity->setDescription( $anime->getSynopsis() );
-                $animeEntity->setSeason( $season );
-                $animeEntity->setYear( $year );
-                
-                // persist
-                $em->persist($animeEntity);
+                // save the entries
+                $em->flush();
+            
 
-            }
+            // register log
+                $imported = $air->findOneBy(['season'=>$season,'year'=>$year]);
+                if(!$imported){
+                    $imported = new AnimeImported();
+                }
 
-            // save the entries
-            $em->flush();
+                // registra dados
+                $imported->setSeason($season);
+                $imported->setYear($year);
 
-            $return = ['success'=> true,'data'=>['imported'=>$save]];
+                // save the entries
+                if(!$imported->getId()){
+                    $em->persist($imported);
+                }
+
+                $em->flush();
+
+            // retorno
+            $return = ['success'=> true,'data'=>[]];
         }
 
     	return $this->json($return);

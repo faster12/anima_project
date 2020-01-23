@@ -3,75 +3,82 @@
 {% block title %}Lista!{% endblock %}
 
 {% block body %}
-	<div class="row anime-table">
-		<div class="col-sm-7 mb3">
-			Tabela
-		</div>
-		<div class="col-sm-5">
-			<div class="input-group">
-				<input class="form-control" name="year">
-				<select class="form-control" name="season">
-					<option value="">Selecione</option>
-					<option value="winter">Inverno</option>
-					<option value="spring">Primavera</option>
-					<option value="summer">Verão</option>
-					<option value="fall">Outono</option>
-				</select>
-				<div class="input-group-btn">
-					<span class="btn btn-info btn-block" id="AnimeImport">Import</span>
+	<div class="anime-table">
+		<div class="row">
+			<div class="col-sm-7 mb3">
+				Tabela
+			</div>
+			<div class="col-sm-5">
+				<span class="btn btn-info" data-toggle="modal" data-target="#modal1">importado</span>
+				<div class="input-group">
+					<input class="form-control" name="year">
+					<select class="form-control" name="season">
+						<option value="">Selecione</option>
+						<option value="winter">Inverno</option>
+						<option value="spring">Primavera</option>
+						<option value="summer">Verão</option>
+						<option value="fall">Outono</option>
+					</select>
+					<div class="input-group-btn">
+						<span class="btn btn-info btn-block" id="AnimeImport">Import</span>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-12">
-			{% for anime in animes %}
-				<div class="row py2">
-					<!-- id -->
-					<div class="col-sm-1">
-						{{anime.id}}
+		<div class="row">
+			<div class="col-12">
+				{% for anime in animes %}
+					<div class="row py2">
+						<!-- id -->
+						<div class="col-sm-1">
+							{{anime.id}}
+						</div>
+
+						<!-- image -->
+						<div class="col-sm-2">
+							<img src="{{anime.image}}" width="50px" height="50px">					
+						</div>
+
+						<!-- title -->
+						<div class="col-sm-3">
+							{{anime.title}}
+						</div>
+
+						<!-- score -->
+						<div class="col-sm-1">
+							{{anime.score}}
+						</div>
+
+						<!-- type -->
+						<div class="col-sm-1">
+							{{anime.type}}
+						</div>
+
+						<!-- season - year -->
+						<div class="col-sm-2">
+							{{anime.season}} - {{anime.year}}
+						</div>
+
+						<!-- description 
+						<div class="col-sm-2">
+							{{ anime.description }}
+						</div>-->
+
 					</div>
-
-					<!-- image -->
-					<div class="col-sm-2">
-						<img src="{{anime.image}}" width="50px" height="50px">					
-					</div>
-
-					<!-- title -->
-					<div class="col-sm-3">
-						{{anime.title}}
-					</div>
-
-					<!-- score -->
-					<div class="col-sm-1">
-						{{anime.score}}
-					</div>
-
-					<!-- type -->
-					<div class="col-sm-1">
-						{{anime.type}}
-					</div>
-
-					<!-- season - year -->
-					<div class="col-sm-2">
-						{{anime.season}} - {{anime.year}}
-					</div>
-
-					<!-- description 
-					<div class="col-sm-2">
-						{{ anime.description }}
-					</div>-->
-
-				</div>
-			{% else %}
-				ops.. nada encontrado
-			{% endfor %}
+				{% else %}
+					ops.. nada encontrado
+				{% endfor %}
+			</div>
 		</div>
 	</div>
+
+	{{ include('modal/anime_list_updated.html.twig') }}
+
 {% endblock %}
 
 {% block javascripts %}
 	<script>
 		$('.anime-table').on('click','#AnimeImport',function(){
-			console.log('clicked');
 			var season = $('[name="season"]').val(),
 				year = $('[name="year"]').val();
 
