@@ -44,7 +44,13 @@ anime_import:
     controller: App\Controller\Admin\AnimaController::importSeason
     methods:    POST
 
+genre_import:
+    path:       /admin/genre/import
+    controller: App\Controller\Admin\AnimaController::importGenre
+    methods:    GET
+
 anime_list:
     path:       /admin/anime
     controller: App\Controller\Admin\AnimaController::index
     methods:    GET|HEAD
+

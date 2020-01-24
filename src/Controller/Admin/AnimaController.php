@@ -7,10 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-// entity / repository
+// entity
 use App\Repository\AnimeRepository;
 use App\Repository\AnimeImportedRepository;
+use App\Repository\AnimeGenreRepository;
+
+// repository
 use App\Entity\Anime;
+use App\Entity\AnimeGenre;
 use App\Entity\AnimeImported;
 
 // services
@@ -28,7 +32,6 @@ class AnimaController extends AbstractController
      */
     public function index(AnimeRepository $ar,AnimeImportedRepository $air,Request $request)
     {
-        
         // $_GET page
         $page = $request->query->get('page','1');
         
@@ -49,11 +52,56 @@ class AnimaController extends AbstractController
     }
 
     /**
+     * @Route("/admin/genre/import", name="genre_import")
+     */
+    public function importGenre(Jikan $jikan,AnimeGenreRepository $agr){
+        
+        // get the manager
+        $em = $this->getDoctrine()->getManager();
+        
+        // get genres
+        $crawler = $jikan->AnimeGenres();
+
+        // message
+        $return = ['success'=>false,'message'=>'ops.. ocorreu um erro'];
+        
+        // le dados do crawler
+        foreach($crawler->genres as $genre){
+            
+            // get name
+            $name = $genre->getName();
+
+            // cria entidade
+            $genreEntity = $agr->findOneBy([ 'name' => $name ]);
+            $genreEntity = $genreEntity ?: new AnimeGenre();
+
+            // set data
+            $genreEntity->setName( $name );
+            $genreEntity->setCount( $genre->getCount() );
+
+            // persist
+            $em->persist($genreEntity);
+
+            // retorno
+            $return = ['success'=> true,'data'=>[]];
+        }
+
+        // salva
+        $em->flush();
+
+        return $this->json($return);
+
+    }
+
+    /**
      * @Route("/admin/anime/import", name="anime_import")
      */
-    public function importSeason(Jikan $jikan,Request $request,AnimeRepository $ar,AnimeImportedRepository $air# Formatter $formatter
-    )
-    {
+    public function importSeason(Jikan $jikan,
+        Request $request,
+        AnimeRepository $ar,
+        AnimeImportedRepository $air
+        # Formatter $formatter
+    ){
 
         // get data
         $season = $request->request->get('season');
@@ -75,7 +123,7 @@ class AnimaController extends AbstractController
                 
                 // le e salva dados
                 foreach($a->anime as $k => $anime){
-                                    
+                                 
                     // id do mal
                     $id = $anime->getMalId();
 

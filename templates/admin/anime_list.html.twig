@@ -5,10 +5,10 @@
 {% block body %}
 	<div class="anime-table">
 		<div class="row">
-			<div class="col-sm-7 mb3">
+			<div class="col-sm-6 mb3">
 				Tabela - Total {{animes.total}}
 			</div>
-			<div class="col-sm-5">
+			<div class="col-sm-6">
 				<span class="btn btn-info" data-toggle="modal" data-target="#modal1">importado</span>
 				<div class="input-group">
 					<input class="form-control" name="year">
@@ -21,6 +21,7 @@
 					</select>
 					<div class="input-group-btn">
 						<span class="btn btn-info btn-block" id="AnimeImport">Import</span>
+						<span class="btn btn-info btn-block" id="GenreImport">Genre Import</span>
 					</div>
 				</div>
 			</div>
@@ -85,6 +86,7 @@
 
 {% block javascripts %}
 	<script>
+		// a import
 		$('.anime-table').on('click','#AnimeImport',function(){
 			var season = $('[name="season"]').val(),
 				year = $('[name="year"]').val();
@@ -103,6 +105,17 @@
 				alert('error');
 			}
 
+		});
+
+		// genre inport
+		$('.anime-table').on('click','#GenreImport',function(){
+			$.ajax({
+				url:'/admin/genre/import',
+				type:"GET",
+				success:function(data){
+
+				}
+			});
 		});
 	</script>
 {% endblock %}
