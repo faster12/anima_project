@@ -56,6 +56,26 @@ class Anime
      */
     private $year;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $aired;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $episodes;
+
+    /**
+     * @ORM\Column(type="string", type="string", length=50)
+     */
+    private $source;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $mal_members;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -153,6 +173,54 @@ class Anime
     public function setYear(?int $year): self
     {
         $this->year = $year;
+
+        return $this;
+    }
+
+    public function getAired(): ?\DateTimeInterface
+    {
+        return $this->aired;
+    }
+
+    public function setAired(\DateTimeInterface $aired): self
+    {
+        $this->aired = $aired;
+
+        return $this;
+    }
+
+    public function getEpisodes(): ?int
+    {
+        return $this->episodes;
+    }
+
+    public function setEpisodes(?int $episodes): self
+    {
+        $this->episodes = $episodes;
+
+        return $this;
+    }
+
+    public function getSource(): ?String
+    {
+        return $this->source;
+    }
+
+    public function setSource(?String $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function getMalMembers(): ?int
+    {
+        return $this->mal_members;
+    }
+
+    public function setMalMembers(?int $mal_members): self
+    {
+        $this->mal_members = $mal_members;
 
         return $this;
     }

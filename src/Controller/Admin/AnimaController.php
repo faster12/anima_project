@@ -69,6 +69,10 @@ class AnimaController extends AbstractController
                     $animeEntity->setImage( $anime->getImageURL() );
                     $animeEntity->setType( $anime->getType() );
                     $animeEntity->setDescription( $anime->getSynopsis() );
+                    $animeEntity->setEpisodes( $anime->getEpisodes() );
+                    $animeEntity->setSource( $anime->getSource()  );
+                    $animeEntity->setMalMembers( $anime->getMembers() );
+                    
                     $animeEntity->setSeason( $season );
                     $animeEntity->setYear( $year );
                     
