@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Anime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method Anime|null find($id, $lockMode = null, $lockVersion = null)
@@ -22,19 +23,37 @@ class AnimeRepository extends ServiceEntityRepository
     // /**
     //  * @return Anime[] Returns an array of Anime objects
     //  */
-    /*
-    public function findByExampleField($value)
+    public function baseList($page = 1,$pageSize = 100)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $page = ($page - 1) * $pageSize;
+
+        $query = $this->createQueryBuilder('a')
+            #->andWhere('a.title = :val')->setParameter('val', $value)
+            ->orderBy('a.id', 'DESC')
+            ->setFirstResult($page)
+            ->setMaxResults($pageSize)
+            ->getQuery();#->getResult();
+
+        // gera paginacao e count
+        $paginator = new Paginator($query, $fetchJoinCollection = false);
+        
+        return [
+            // retorna como array
+            'data' => $paginator->getIterator()->getArrayCopy(),
+            'total'=>$paginator->count() 
+        ];
     }
+
+    /* 
+    
+    O que é o paginator
+
+        // Perform a Count query using `DISTINCT` keyword.
+        // Perform a Limit Subquery with `DISTINCT` to find all ids of the entity in from on the current page.
+        // Perform a WHERE IN query to get all results for the current page.
+        // Se tiver subquery ou join , fetchjoin = true
     */
+    
 
     /*
     public function findOneBySomeField($value): ?Anime

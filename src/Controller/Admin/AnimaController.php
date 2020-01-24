@@ -2,34 +2,57 @@
 
 namespace App\Controller\Admin;
 
+// system
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+
+// entity / repository
 use App\Repository\AnimeRepository;
 use App\Repository\AnimeImportedRepository;
 use App\Entity\Anime;
 use App\Entity\AnimeImported;
+
+// services
 use Jikan\Jikan;
+use App\Service\Paginator;
+
+// utils
+use App\Utils\Formatter;
+
 
 class AnimaController extends AbstractController
 {
     /**
      * @Route("/admin/anime", name="anime_list")
      */
-    public function index(AnimeRepository $ar,AnimeImportedRepository $air )
+    public function index(AnimeRepository $ar,AnimeImportedRepository $air,Request $request)
     {
-        // $entityManager = $this->getDoctrine()->getManager();
+        
+        // $_GET page
+        $page = $request->query->get('page','1');
+        
+        // query # $entityManager = $this->getDoctrine()->getManager();
+        $animeList = $ar->baseList($page);
 
+        // paginator
+        $paginator = new Paginator( $animeList['total'], $request->query->all() );
+        $paginator->setPath('anime_list');
+
+        // retorna valores
         return $this->render('admin/anime_list.html.twig', [
-            'animes' => $ar->findAll(),
+            'animes' => $animeList,
             'imported' => $air->findAll(),
+            'animePaginator' => $paginator->generate(),
         ]);
+
     }
 
     /**
      * @Route("/admin/anime/import", name="anime_import")
      */
-    public function importSeason(Jikan $jikan, Request $request,AnimeRepository $ar, AnimeImportedRepository $air)
+    public function importSeason(Jikan $jikan,Request $request,AnimeRepository $ar,AnimeImportedRepository $air# Formatter $formatter
+    )
     {
 
         // get data
@@ -56,11 +79,12 @@ class AnimaController extends AbstractController
                     // id do mal
                     $id = $anime->getMalId();
 
+                    // format date
+                    $aired = Formatter::ImmutableToTimestamp( $anime->getAiringStart() );
+
                     // create or update
                     $animeEntity = $ar->findOneBy([ 'mal_id' => $id ]);
-                    if(!$animeEntity){
-                        $animeEntity = new Anime();
-                    }
+                    $animeEntity = $animeEntity ?: new Anime();
 
                     // set data
                     $animeEntity->setMalId( $id );
@@ -72,34 +96,33 @@ class AnimaController extends AbstractController
                     $animeEntity->setEpisodes( $anime->getEpisodes() );
                     $animeEntity->setSource( $anime->getSource()  );
                     $animeEntity->setMalMembers( $anime->getMembers() );
-                    
+                    $animeEntity->setAired( $aired );
                     $animeEntity->setSeason( $season );
                     $animeEntity->setYear( $year );
-                    
+
                     // persist
                     $em->persist($animeEntity);
 
                 }
 
-                // save the entries
+                // salva
                 $em->flush();
             
-
             // register log
-                $imported = $air->findOneBy(['season'=>$season,'year'=>$year]);
-                if(!$imported){
-                    $imported = new AnimeImported();
-                }
-
+                
                 // registra dados
+                $imported = $air->findOneBy(['season'=>$season,'year'=>$year]);
+                $imported = $imported ?: new AnimeImported();
                 $imported->setSeason($season);
                 $imported->setYear($year);
 
-                // save the entries
-                if(!$imported->getId()){
-                    $em->persist($imported);
-                }
+                // caso nao existe persiste dados
+                if(!$imported->getId()){ $em->persist($imported); }
 
+                // salva
+                echo $em->getUnitOfWork()->getEntityState($imported);
+                echo "\n";
+                echo $em->getUnitOfWork()->getEntityState($animeEntity);
                 $em->flush();
 
             // retorno
@@ -108,4 +131,7 @@ class AnimaController extends AbstractController
 
     	return $this->json($return);
     }
+
+
+
 }
