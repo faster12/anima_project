@@ -11,7 +11,7 @@ class Paginator {
 
 	public function __construct($total,$filters = [],$limit = 100){
 		$this->filters = $filters;
-		$this->current = $filters['page'];#( ($filters['page']?:1) - 1) * $limit;
+		$this->current = $filters['page'] ?? 1; #( ($filters['page']?:1) - 1) * $limit;
 		$this->last = ceil( $total / $limit );
 	}
 

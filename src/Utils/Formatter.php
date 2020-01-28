@@ -8,6 +8,7 @@ class Formatter {
 
 		// converte data
 		$timestampDate = NULL;
+		$dateTime = new \Datetime('now');
 		if($immutableDate){
             $dateTime = new \DateTime();
 			$dateTime->setTimestamp($immutableDate->getTimestamp());

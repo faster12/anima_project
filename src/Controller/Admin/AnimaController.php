@@ -168,9 +168,6 @@ class AnimaController extends AbstractController
                 if(!$imported->getId()){ $em->persist($imported); }
 
                 // salva
-                echo $em->getUnitOfWork()->getEntityState($imported);
-                echo "\n";
-                echo $em->getUnitOfWork()->getEntityState($animeEntity);
                 $em->flush();
 
             // retorno
