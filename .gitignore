@@ -38,3 +38,7 @@
 /composer.phar
 
 symfony_project_web/
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

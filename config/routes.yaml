@@ -54,3 +54,15 @@ anime_list:
     controller: App\Controller\Admin\AnimaController::index
     methods:    GET|HEAD
 
+register2:
+    path: /register2
+    controller: App\Controller\AuthController::register
+    methods: POST
+
+api:
+    path: /api
+    controller: App\Controller\AuthController::api
+
+login2_check:
+    path:     /login2_check
+    methods:  [POST]
